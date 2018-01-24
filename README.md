@@ -18,6 +18,3 @@ npm install
 
 ## Swagger
 <pre>http://localhost:3000/swagger</pre>
-
-## Docker-hub
-<pre>mikarinneoracle/dockernode</pre>
