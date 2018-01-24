@@ -4,7 +4,7 @@
   },
   "command": "node server.js",
   "release": {},
-  "notes": "a sample application",
+  "notes": "Nodetester sample application",
   "mode": "rolling",
   "isClustered": "true"
 }
