@@ -1,27 +1,23 @@
-# dockernode-app
+# nodetester
 
-## Build for Docker
+## Install
 <pre>
-mkdir dockernode
-git clone git@github.com:mikarinneoracle/dockernode-app.git dockernode
-cd dockernode
-docker build -t dockernode-app .
+git clone git@github.com:mikarinneoracle/nodetester.git
+cd nodetester
+npm install
 </pre>
 
-## Image
-<pre>docker images dockernode-app</pre>
-
 ## Running
-<pre>docker run -it --rm -p 49160:3000 dockernode-app</pre>
+<pre>sh startNodemon.sh</pre>
 
 ## Testing
-<pre>curl "http://localhost:49160"</pre>
+<pre>curl "http://localhost:3000"</pre>
 
 ## Unit Testing
 <pre>npm test</pre>
 
 ## Swagger
-<pre>http://localhost:49160/swagger</pre>
+<pre>http://localhost:3000/swagger</pre>
 
 ## Docker-hub
 <pre>mikarinneoracle/dockernode</pre>
