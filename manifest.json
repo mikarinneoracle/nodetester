@@ -1,0 +1,10 @@
+{
+  "runtime":{
+    "majorVersion":"6"
+  },
+  "command": "node server.js",
+  "release": {},
+  "notes": "a sample application",
+  "mode": "rolling",
+  "isClustered": "true"
+}
