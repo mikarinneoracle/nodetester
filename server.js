@@ -2,12 +2,14 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var swaggerJSDoc = require('swagger-jsdoc');
 var MongoClient = require('mongodb').MongoClient;
+var session = require('express-session');
 
 var port = process.env.PORT || process.env.npm_package_config_port;
 var mongodb_host = process.env.BACKEND_MONGODB_HOST || null;
-var useSessions = true; // Default is true
 var loaderioKey = process.env.LOADERIO_KEY || null;
 
+/*
+//var useSessions = false; // Default is false
 if(process.env.USE_SESSIONS)
 {
     // To support app container user-defined values
@@ -18,22 +20,19 @@ if(process.env.USE_SESSIONS)
     useSessions = process.env.npm_package_config_use_sessions === 'true';
     console.log("npm_package_config_use_sessions - Setting use sessions " + useSessions);
 }
+*/
+
 var app = express();
-var session = require('express-session');
 var i = 0; // When not using sessions
 
 module.exports = app;
 
-if(useSessions)
-{
-  app.use(session(
+app.use(session(
     { secret: 'mynodejssecretXYZ123',
       resave: false, saveUninitialized: true,
       cookie: { maxAge: 60000 }
     }
   ));
-}
-
 app.use(bodyParser.json());
 app.use(express.static(__dirname));
 
@@ -52,17 +51,17 @@ app.get('/loaderio-*', function(req, res) {
  *   get:
  *     tags:
  *       - Env
- *     description: Returns environment variables.
+ *     description: Returns environment variables and headers.
  *
  *     produces:
  *       - application/json
  *     responses:
  *       200:
- *         description: Returns environment variables.
+ *         description: Returns environment variables and headers.
  */
 
 app.get('/env/', function(req, res) {
-  res.send({ 'env' : process.env });
+  res.send({ 'env' : process.env , 'headers' : req.headers });
 });
 
 /**
@@ -83,22 +82,26 @@ app.get('/env/', function(req, res) {
  *         in: query
  *         required: false
  *         type: string
+ *       - name: session_sticky
+ *         description: Use sticky sessions
+ *         in: query
+ *         required: false
+ *         type: integer
  *     responses:
  *       200:
- *         description: Returns the incremented value of i by 1. Also returns the boolean value of useSessions.
+ *         description: Returns the incremented value of i by 1. Also returns the boolean value of sticky sessions.
  *         schema:
  *           properties:
  *            i:
  *              type: integer
- *            useSessions:
- *              type: boolean
+ *            sessionSticky:
+ *              type: integer
  */
 
 app.get('/inc/', function(req, res) {
-
-  console.log(JSON.stringify(req.headers));
     
   var userid = req.query.userid; // Optional
+  var useSessions = req.query.session_sticky; // Optional
   var result;
   if(userid && mongodb_host)
   {
@@ -134,7 +137,7 @@ app.get('/inc/', function(req, res) {
                       res.send({ 'i': -1 , 'err': err.message });
                       return;
                   }
-                  res.send({ 'i': userid_i , 'useSessions': useSessions, 'userid':userid });
+                  res.send({ 'i': userid_i , 'sessionSticky': useSessions, 'userid':userid });
                   db.close();
                   return;
                 });
@@ -149,7 +152,7 @@ app.get('/inc/', function(req, res) {
                       res.send({ 'i': -1 , 'err': err.message });
                       return;
                   }
-                  res.send({ 'i': 0 , 'useSessions': useSessions, 'userid':userid });
+                  res.send({ 'i': 0 , 'sessionSticky': useSessions, 'userid':userid });
                   db.close();
                   return;
                 });
@@ -158,24 +161,26 @@ app.get('/inc/', function(req, res) {
         });
       }
     });
-  } else if(useSessions) {
+  } else if(useSessions == 1) {
       var session = req.session;
       if (session.i != null)
       {
         session.i++;
       } else {
-        console.log("A new session " + (userid ? userid : ''));
+        console.log("A new session " + (userid ? userid : '' ));
+        console.log(session);
         session.i = 0;
       }
       req.session.save(); // Unless calling this the session is saved in the end of the req by default
       result = session.i;
       if(userid)
       {
-        res.send({ 'i': result , 'useSessions': useSessions , 'userid' : userid });
+        res.send({ 'i': result , 'sessionSticky': useSessions , 'userid' : userid });
       } else {
-        res.send({ 'i': result , 'useSessions': useSessions });
+        res.send({ 'i': result , 'sessionSticky': useSessions });
       }
   } else {
+    req.session.destroy();
     result = i++;
     res.send({ 'i': i , 'useSessions': useSessions });
   }
@@ -262,7 +267,7 @@ app.get('/exit', function(req, res) {
 
 app.listen(port, function() {
   	console.log('server listening on port ' + port);
-    console.log("Using sessions is :" + useSessions);
+    //console.log("Using sessions is :" + useSessions);
 });
 
 // swagger definition

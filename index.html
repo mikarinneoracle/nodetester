@@ -53,6 +53,10 @@
             <input class="form-control" type="text" id="delay" value="200">
             <small class="form-text text-muted">Delay between REST calls in ms</small>
           </div>
+          <div class="form-group col-md-3">
+            <label for="session_sticky">Sticky sessions</label>
+            <input class="form-check-input" type="checkbox" id="session_sticky">
+          </div>
           <div class="form-group col-md-12">
             <div class="well" id='result'>Starting up ...</div>
           </div>
@@ -83,17 +87,21 @@
     } else {
       delay = 0;
     }
+    var session_sticky = 0;
+    if ($('#session_sticky').is(':checked')) {
+        session_sticky = 1;
+    }
     var res = '';
     setTimeout(function () {
       for(var i=0; i < done; i++) {
-        $.getJSON('/inc', function(data) {
+        $.getJSON('/inc?session_sticky=' + session_sticky, function(data) {
           if(data.i === null || data.i == 0)
           {
               res += 'New session <br>';
           } else {
               res += data.i + ' <br>';
           }
-          console.log(data.useSessions);
+          console.log(data);
           done -= 1;
           if(done == 0) { // All reuests done, print out the results
             $('#result').html(res);
