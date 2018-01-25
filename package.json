@@ -1,7 +1,7 @@
 {
   "name": "dockernode",
-  "version": "3.0.5",
-  "description": "node.js tester for docker, OCCS and ACCS",
+  "version": "3.1.0",
+  "description": "node.js tester for Docker and ACCS",
   "main": "server.js",
   "scripts": {
     "test": "mocha",
