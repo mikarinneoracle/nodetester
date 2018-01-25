@@ -95,6 +95,9 @@ app.get('/env/', function(req, res) {
  */
 
 app.get('/inc/', function(req, res) {
+
+  console.log(JSON.stringify(req.headers));
+    
   var userid = req.query.userid; // Optional
   var result;
   if(userid && mongodb_host)
