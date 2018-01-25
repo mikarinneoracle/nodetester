@@ -30,6 +30,7 @@ module.exports = app;
 app.use(session(
     { secret: 'mynodejssecretXYZ123',
       resave: false, saveUninitialized: true,
+      name: 'nodetester',
       cookie: { maxAge: 60000 }
     }
   ));

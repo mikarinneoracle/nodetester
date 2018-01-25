@@ -1,6 +1,6 @@
 {
   "name": "dockernode",
-  "version": "3.1.0",
+  "version": "3.1.1",
   "description": "node.js tester for Docker and ACCS",
   "main": "server.js",
   "scripts": {
