@@ -8,13 +8,10 @@ npm install
 </pre>
 
 ## Running
+<pre>npm start</pre>
+
+## Running with mongodb backend and/or loader.io
 <pre>sh startNodemon.sh</pre>
-
-## Testing
-<pre>curl "http://localhost:3000"</pre>
-
-## Unit Testing
-<pre>npm test</pre>
 
 ## Swagger
 <pre>http://localhost:3000/swagger</pre>
