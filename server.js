@@ -7,6 +7,7 @@ var session = require('express-session');
 var port = process.env.PORT || process.env.npm_package_config_port;
 var mongodb_host = process.env.BACKEND_MONGODB_HOST || null;
 var loaderioKey = process.env.LOADERIO_KEY || null;
+var cookieName = process.env.COOKIE_NAME || 'connect.sid';
 
 /*
 //var useSessions = false; // Default is false
@@ -30,7 +31,7 @@ module.exports = app;
 app.use(session(
     { secret: 'mynodejssecretXYZ123',
       resave: false, saveUninitialized: true,
-      name: 'nodetester',
+      name: cookieName,
       cookie: { maxAge: 60000 }
     }
   ));
