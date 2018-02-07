@@ -270,6 +270,7 @@ app.get('/exit', function(req, res) {
 app.listen(port, function() {
   	console.log('server listening on port ' + port);
     //console.log("Using sessions is :" + useSessions);
+    console.log("Cookie name is :" + cookieName);
 });
 
 // swagger definition
