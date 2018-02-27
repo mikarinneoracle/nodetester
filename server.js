@@ -35,7 +35,8 @@ app.use(session(
       cookie: { maxAge: 60000 }
     }
   ));
-app.use(bodyParser.json());
+app.use(bodyParser.json()); // support json encoded bodies
+app.use(bodyParser.urlencoded({ extended: true })); // support encoded bodies
 app.use(express.static(__dirname));
 
 app.get('/loaderio-*', function(req, res) {
@@ -265,6 +266,35 @@ app.get('/last/', function(req, res) {
 
 app.get('/exit', function(req, res) {
   process.exit();
+});
+
+app.post('/inc', function(req, res) {
+  var userid = req.body.userid; // Optional
+  var useSessions = req.body.session_sticky; // Optional
+  console.log('post ' + useSessions);
+  if(useSessions == 1) {
+      var session = req.session;
+      if (session.i != null)
+      {
+        session.i++;
+      } else {
+        console.log("A new session " + (userid ? userid : '' ));
+        console.log(session);
+        session.i = 0;
+      }
+      req.session.save(); // Unless calling this the session is saved in the end of the req by default
+      result = session.i;
+      if(userid)
+      {
+        res.send({ 'i': result , 'sessionSticky': useSessions , 'userid' : userid });
+      } else {
+        res.send({ 'i': result , 'sessionSticky': useSessions });
+      }
+  } else {
+    req.session.destroy();
+    result = i++;
+    res.send({ 'i': i , 'sessionSticky': "0" });
+  }
 });
 
 app.listen(port, function() {

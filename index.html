@@ -94,7 +94,7 @@
     var res = '';
     setTimeout(function () {
       for(var i=0; i < done; i++) {
-        $.getJSON('/inc?session_sticky=' + session_sticky, function(data) {
+        $.post('/inc', { 'session_sticky' : session_sticky } , function(data) {
           if(data.i === null || data.i == 0)
           {
               res += 'New session <br>';
