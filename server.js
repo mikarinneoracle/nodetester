@@ -184,7 +184,7 @@ app.get('/inc/', function(req, res) {
   } else {
     req.session.destroy();
     result = i++;
-    res.send({ 'i': i , 'sessionSticky': "0" });
+    res.send({ 'i': result , 'sessionSticky': "0" });
   }
 });
 
